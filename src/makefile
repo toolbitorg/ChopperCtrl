@@ -4,7 +4,7 @@ WX-CONFIG_LIBS		= $(shell wx-config --libs)
 
 
 PROGRAM	= ChopperCtrl.exe
-OBJECTS	= Main.o Simple.o
+OBJECTS	= main.o chopper_ctrl.o
 
 # implementation
 

@@ -1,13 +1,13 @@
 
-#include "Main.h"
-#include "Simple.h"
+#include "main.h"
+#include "chopper_ctrl.h"
 
 IMPLEMENT_APP(MyApp)
 
 bool MyApp::OnInit()
 {
-	Simple *simple = new Simple(wxT("Simple"));
-	simple->Show(true);
+	MyFrame *myframe = new MyFrame(NULL, wxID_ANY, wxString("Chopper Ctrl"));
+	myframe->Show(true);
 
 	return true;
 }
