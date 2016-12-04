@@ -1,0 +1,13 @@
+
+
+git clone https://github.com/wxWidgets/wxWidgets.git
+
+
+* Using plain makefiles:
+
+Open DOS command line window (cmd.exe, *not* Bash sh.exe).
+
+Change directory to %WXWIN%\build\msw
+
+mingw32-make -f makefile.gcc BUILD=release SHARED=0
+
