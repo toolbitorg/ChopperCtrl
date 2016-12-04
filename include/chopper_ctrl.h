@@ -36,6 +36,7 @@ public:
     // end wxGlade
 
     MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos=wxDefaultPosition, const wxSize& size=wxDefaultSize, long style=wxDEFAULT_FRAME_STYLE);
+	~MyFrame();
 
 private:
     // begin wxGlade: MyFrame::methods

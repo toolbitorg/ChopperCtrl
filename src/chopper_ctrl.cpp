@@ -42,6 +42,12 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 }
 
 
+MyFrame::~MyFrame()
+{
+	delete chopper;
+}
+
+
 void MyFrame::set_properties()
 {
     // begin wxGlade: MyFrame::set_properties
