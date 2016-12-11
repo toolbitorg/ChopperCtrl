@@ -1,19 +1,24 @@
 BINDIR = ../bin
 OBJDIR = ../build
-INCDIR = ../../../include
-LIBDIR = ../../../lib/gcc
-LIBSRCDIR = ../../../src
+INCDIR = ../include
+LIBDIR = ../../ToolbitSDK/lib/gcc
+LIBINCDIR = ../../ToolbitSDK/include
+LIBSRCDIR = ../../ToolbitSDK/src
 
-CC  = gcc
-CXX = g++
-CFLAGS  = -g -MMD -MP
+CXX = $(shell wx-config --cxx)
+WX-CONFIG_CXXFLAGS	= $(shell wx-config --cxxflags)
+WX-CONFIG_LIBS		= $(shell wx-config --libs)
+
+# CC  = gcc
+# CXX = g++
+CXXFLAGS  = -g -MMD -MP
 LDFLAGS = 
-INCLUDE = -I$(INCDIR) `pkg-config libusb-1.0 --cflags`
+INCLUDE = -I$(INCDIR) -I$(LIBINCDIR) $(WX-CONFIG_CXXFLAGS)
 
 LIBOBJS = $(LIBDIR)/libtbi.a
-LIBS = $(LIBOBJS) `pkg-config libusb-1.0 libudev --libs` -lrt -lpthread 
+LIBS = $(LIBOBJS) $(WX-CONFIG_LIBS) `pkg-config libusb-1.0 --libs` -lpthread 
 
-TARGET = $(BINDIR)/basicdemo
+TARGET = $(BINDIR)/ChopperCtrl
 CPP_SOURCES = $(wildcard *.cpp) 
 
 OBJECTS	= $(addprefix $(OBJDIR)/, $(CPP_SOURCES:.cpp=.o)) $(addprefix $(OBJDIR)/, $(C_SOURCES:.c=.o))
@@ -25,7 +30,7 @@ DEPENDS = $(OBJECTS:.o=.d)
 all: $(TARGET)
 
 $(LIBOBJS): FORCE
-	cd $(LIBSRCDIR); $(MAKE) -f makefile.gcc
+	cd $(LIBSRCDIR); make -f makefile.gcc
 
 FORCE:
 
@@ -35,14 +40,11 @@ $(TARGET): $(OBJECTS) $(LIBOBJS)
 
 $(OBJDIR)/%.o : %.cpp 
 	@[ -d $(OBJDIR) ] || mkdir -p $(OBJDIR)	
-	$(CXX) $(CFLAGS) $(INCLUDE) -o $@ -c $<
-
-$(OBJDIR)/%.o : %.c
-	@[ -d $(OBJDIR)/HIDAPI/linux/ ] || mkdir -p $(OBJDIR)/HIDAPI/linux
-	$(CC) $(CFLAGS) $(INCLUDE) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $<
 
 clean:
 	$(RM) $(OBJECTS) $(TARGET) $(DEPENDS)
+	cd $(LIBSRCDIR); make -f makefile.gcc clean
 
 
 -include $(DEPENDS)
