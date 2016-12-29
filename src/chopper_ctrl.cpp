@@ -37,7 +37,16 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 		uint32_t port = chopper->getUsbPortStatus();
 		button_1->SetValue(port & 0x01);
 		button_2->SetValue(port & 0x02);
-		SetTitle(_("Chopper Ctrl - Ready"));
+#ifdef __linux__
+		if(port & 0x01)
+			button_1->SetBackgroundColour(wxColour(wxT("SKY BLUE")));
+		else
+			button_1->SetBackgroundColour(wxColour(wxT("WHITE")));
+		if (port & 0x02)
+			button_2->SetBackgroundColour(wxColour(wxT("SKY BLUE")));
+		else
+			button_2->SetBackgroundColour(wxColour(wxT("WHITE")));
+#endif
 	}
 }
 
@@ -81,15 +90,30 @@ END_EVENT_TABLE();
 
 void MyFrame::ToggleButton(wxCommandEvent &event)
 {
-	if (button_1->GetValue())
+	if (button_1->GetValue()) {
 		chopper->enableUsbPort(1);
-	else
+#ifdef __linux__
+		button_1->SetBackgroundColour(wxColour(wxT("SKY BLUE")));
+#endif
+	}
+	else {
 		chopper->disableUsbPort(1);
-
-	if (button_2->GetValue())
+#ifdef __linux__
+		button_1->SetBackgroundColour(wxColour(wxT("WHITE")));
+#endif
+	}
+	if (button_2->GetValue()) {
 		chopper->enableUsbPort(2);
-	else
+#ifdef __linux__
+		button_2->SetBackgroundColour(wxColour(wxT("SKY BLUE")));
+#endif
+	}
+	else {
 		chopper->disableUsbPort(2);
+#ifdef __linux__
+		button_2->SetBackgroundColour(wxColour(wxT("WHITE")));
+#endif
+	}
 
     event.Skip();
 }
@@ -104,14 +128,12 @@ void MyFrame::OnIdle(wxIdleEvent& event)
 		{
 			button_1->Disable();
 			button_2->Disable();
-			SetTitle(_("Chopper Ctrl"));
 		}
 		else {
 			// Set current ports status to toggle buttons
 			uint32_t port = chopper->getUsbPortStatus();
 			button_1->SetValue(port & 0x01);
 			button_2->SetValue(port & 0x02);
-			SetTitle(_("Chopper Ctrl - Ready"));
 			button_1->Enable();
 			button_2->Enable();
 		}
